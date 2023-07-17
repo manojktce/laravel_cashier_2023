@@ -14,7 +14,7 @@
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                   <div class="card-header"> 
-                                        ${{ $plan->price }}/Mo
+                                        ${{ $plan->price }}
                                   </div>
                                   <div class="card-body">
                                     <h5 class="card-title">{{ $plan->name }}</h5>
