@@ -21,7 +21,7 @@
                                     <p class="card-text">$ {{ $plan->price }}</p>
   
                                     <a href="{{ route('plans.show', $plan->slug) }}" class="btn btn-primary pull-right">Choose</a>
-  
+                                    
                                   </div>
                                 </div>
                             </div>

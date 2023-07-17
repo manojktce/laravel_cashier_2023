@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Plan;
+use Stripe;
 
 class PlanController extends Controller
 {
@@ -34,6 +35,20 @@ class PlanController extends Controller
         $plan = Plan::find($request->plan);
         $subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)
                         ->create($request->token);
+        return view("subscription_success");
+    }
+
+    public function one_time_purchase(Request $request)
+    {
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        
+        $payment = Stripe\Charge::create ([
+                "amount" => ( 7 * 1) * 100,
+                "currency" => "usd",
+                "source" => $request->token,
+                "description" => "Single time purchase payment", 
+        ]);
+
         return view("subscription_success");
     }
 }
