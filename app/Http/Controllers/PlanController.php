@@ -9,6 +9,16 @@ class PlanController extends Controller
 {
     public function index()
     {
+        /*$stripe = new \Stripe\StripeClient('sk_test_9v7nEOAi1RbQ8SPfxsrLWpDo');
+        $st = $stripe->subscriptions->retrieve(
+            'sub_1NUqumKNn8u3628oKvzPFjeU',
+            []
+        );*/
+
+        /*$stripe = new \Stripe\StripeClient('sk_test_9v7nEOAi1RbQ8SPfxsrLWpDo');
+        $st = $stripe->subscriptions->all(['limit' => 3]);
+        echo "<pre>"; print_r($st); exit;*/
+
         $plans = Plan::get();
         return view("plans",compact("plans"));
     }
