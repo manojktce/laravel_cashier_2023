@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Plan;
 use Stripe;
+use Illuminate\Support\Facades\Auth;
 
 class PlanController extends Controller
 {
@@ -23,7 +24,9 @@ class PlanController extends Controller
     public function subscription(Request $request)
     {
         $plan = Plan::find($request->plan);
-        $subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)
+        /*$subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)
+                        ->create($request->token);*/
+        $subscription = Auth::user()->newSubscription($request->plan, $plan->stripe_plan)
                         ->create($request->token);
         return redirect()->route('plans')->with('success','Payment successful for subscription');
     }
@@ -38,13 +41,17 @@ class PlanController extends Controller
     {
         $plan = Plan::find($request->plan);
 
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        /*$stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $stripe->charges->create([
             'amount' => $plan->price * 100,
             'currency' => 'usd',
             'source' => 'tok_mastercard',
             'description' => 'Test Single time payment',
-        ]);
+        ]);*/
+
+        $user = Auth::user();
+        $user->charge($plan->price * 100, $request->token);
+
         return redirect()->route('plans')->with('success','Payment successful');
     }
 }
