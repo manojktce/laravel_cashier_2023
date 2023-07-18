@@ -10,16 +10,6 @@ class PlanController extends Controller
 {
     public function index()
     {
-        /*$stripe = new \Stripe\StripeClient('sk_test_9v7nEOAi1RbQ8SPfxsrLWpDo');
-        $st = $stripe->subscriptions->retrieve(
-            'sub_1NUqumKNn8u3628oKvzPFjeU',
-            []
-        );*/
-
-        /*$stripe = new \Stripe\StripeClient('sk_test_9v7nEOAi1RbQ8SPfxsrLWpDo');
-        $st = $stripe->subscriptions->all(['limit' => 3]);
-        echo "<pre>"; print_r($st); exit;*/
-
         $plans = Plan::get();
         return view("plans",compact("plans"));
     }
@@ -35,20 +25,26 @@ class PlanController extends Controller
         $plan = Plan::find($request->plan);
         $subscription = $request->user()->newSubscription($request->plan, $plan->stripe_plan)
                         ->create($request->token);
-        return view("subscription_success");
+        return redirect()->route('plans')->with('success','Payment successful for subscription');
+    }
+
+    public function purchase(Plan $plan, Request $request)
+    {
+        $intent = auth()->user()->createSetupIntent();
+        return view("purchase", compact("plan", "intent"));
     }
 
     public function one_time_purchase(Request $request)
     {
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        
-        $payment = Stripe\Charge::create ([
-                "amount" => ( 7 * 1) * 100,
-                "currency" => "usd",
-                "source" => $request->token,
-                "description" => "Single time purchase payment", 
-        ]);
+        $plan = Plan::find($request->plan);
 
-        return view("subscription_success");
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $stripe->charges->create([
+            'amount' => $plan->price * 100,
+            'currency' => 'usd',
+            'source' => 'tok_mastercard',
+            'description' => 'Test Single time payment',
+        ]);
+        return redirect()->route('plans')->with('success','Payment successful');
     }
 }

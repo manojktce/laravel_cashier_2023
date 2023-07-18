@@ -2,6 +2,17 @@
   
 @section('content')
 <div class="container">
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <a href="#" class="close" data-bs-dismiss="alert" aria-label="close">&times;</a>
+            <p>{{ $message }}</p>
+        </div>
+    @elseif(($message = Session::get('error')))
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-bs-dismiss="alert" aria-label="close">&times;</a>
+            <p>{{ $message }}</p>
+        </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -20,7 +31,8 @@
                                     <h5 class="card-title">{{ $plan->description }}</h5>
                                     <p class="card-text">$ {{ $plan->price }}</p>
   
-                                    <a href="{{ route('plans.show', $plan->slug) }}" class="btn btn-primary pull-right">Choose</a>
+                                    <a href="{{ route('plans.show', $plan->slug) }}" class="btn btn-primary pull-right">Subscribe</a>
+                                    <a href="{{ route('plans.purchase', $plan->slug) }}" class="btn btn-primary pull-right">Purchase</a>
                                     
                                   </div>
                                 </div>

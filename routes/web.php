@@ -24,4 +24,7 @@ Route::middleware("auth")->group(function(){
     Route::get('plans', [PlanController::class, 'index'])->name('plans');
     Route::get('plans/{plan}', [PlanController::class, 'show'])->name("plans.show");
     Route::post('subscription', [PlanController::class, 'subscription'])->name("subscription.create");
+
+    Route::get('purchase/{plan}', [PlanController::class, 'purchase'])->name("plans.purchase");
+    Route::post('one_time_purchase', [PlanController::class, 'one_time_purchase'])->name("plans.create");
 });
